@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cuenta {
+  id             String   @id @default(uuid()) @db.Uuid
+  correo         String   @unique @db.VarChar(150)
+  contrasenia    String   @db.VarChar(255)
+  rol            String   @db.VarChar(50)
+  estado         String   @db.VarChar(50)
+  fecha_creacion DateTime @default(now()) @db.Timestamp(6)
+  usuario        usuario?
+}
+
+model usuario {
+  id               String       @id @default(uuid()) @db.Uuid
+  primer_nombre    String       @db.VarChar(50)
+  segundo_nombre   String?      @db.VarChar(50)
+  apellido_paterno String       @db.VarChar(50)
+  apellido_materno String       @db.VarChar(50)
+  puesto           String?      @db.VarChar(100)
+  foto_perfil      String       @db.VarChar(255)
+  biografia        String?
+  cuenta_id        String       @unique @db.Uuid
+  cuenta           cuenta       @relation(fields: [cuenta_id], references: [id], onDelete: Cascade)
+  comentarios      comentario[]
+  opinions         opinion[]
+  publicacions     publicacion[]
+  reaccions        reaccion[]
+}
+
+model publicacion {
+  id             String       @id @default(uuid()) @db.Uuid
+  titulo         String       @db.VarChar(150)
+  contenido      String
+  fecha_creacion DateTime     @default(now()) @db.Timestamp(6)
+  usuario_id     String       @db.Uuid // <--- Añadido @db.Uuid
+  comentarios    comentario[]
+  fotos          foto[]
+  usuario        usuario      @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  reaccions      reaccion[]
+}
+
+model comentario {
+  id             String      @id @default(uuid()) @db.Uuid
+  contenido      String
+  fecha          DateTime    @default(now()) @db.Timestamp(6)
+  usuario_id     String      @db.Uuid // <--- Añadido @db.Uuid
+  publicacion_id String      @db.Uuid // <--- Añadido @db.Uuid
+  publicacion    publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade)
+  usuario        usuario     @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model foto {
+  id             Int         @id @default(autoincrement())
+  publicacion_id String      @db.Uuid // <--- Añadido @db.Uuid
+  url_imagen     String      @db.VarChar(255)
+  fecha          DateTime    @default(now()) @db.Timestamp(6)
+  publicacion    publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade)
+}
+
+model reaccion {
+  id             String      @id @default(uuid()) @db.Uuid
+  publicacion_id String      @db.Uuid // <--- Añadido @db.Uuid
+  usuario_id     String      @db.Uuid // <--- Añadido @db.Uuid
+  fecha          DateTime    @default(now()) @db.Timestamp(6)
+  publicacion    publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade)
+  usuario        usuario     @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@unique([usuario_id, publicacion_id])
+}
+
+model opinion {
+  id                String   @id @default(uuid()) @db.Uuid
+  usuario_id        String?  @db.Uuid // <--- Añadido @db.Uuid
+  mensaje           String
+  fecha             DateTime @default(now()) @db.Timestamp(6)
+  estado_aprobacion String   @db.VarChar(50)
+  usuario           usuario? @relation(fields: [usuario_id], references: [id], onDelete: SetNull)
+}
