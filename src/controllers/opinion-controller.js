@@ -41,6 +41,16 @@ const deleteById = async (req, res, next) => {
     }
 }
 
+const findToLimitAndOffset = async (req, res, next) => {
+    try {
+        const {limit, offset} = req.params
+        const comentarios = await opinion_service.findToLimitAndOffset(limit, offset)
+        res.status(200).json(comentarios)
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports= {
-    create, findById, updateById, deleteById
+    create, findById, updateById, deleteById, findToLimitAndOffset
 }

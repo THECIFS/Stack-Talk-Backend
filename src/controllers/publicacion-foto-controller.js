@@ -53,6 +53,15 @@ const deleteById = async (req, res, next) => {
     }
 }
 
+const countAll = async (req, res, next) => {
+    try {
+        const count = await publicacion_foto_service.countAll()
+        res.status(200).json(count)
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
-    create, findById, findAllToLimitAndOffset, updateById, deleteById
+    create, findById, findAllToLimitAndOffset, updateById, deleteById, countAll
 }

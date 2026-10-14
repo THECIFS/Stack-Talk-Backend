@@ -1,4 +1,18 @@
 const cuenta_usuario_service = require('../services/cuenta-usuario-service')
+const { generateToken, verifyToken } = require('../utils/jwt')
+
+const verify_sesion = async (req, res, next) => {
+    try {
+        const token = req.token
+        const decoded = verifyToken(token)
+        const cuenta = {
+            ...decoded
+        }
+        res.status(200).json(cuenta)
+    } catch (error) {
+        next(error)
+    }
+}
 
 const createCuentaUsuario = async(req, res, next) =>{
     try{
@@ -44,13 +58,28 @@ const login = async (req, res, next) => {
     try {
         const {correo, contrasenia} = req.body
         const cuenta = await cuenta_usuario_service.findByCorreo(correo, contrasenia)
-        res.status(200).json(cuenta)
+        const token = await generateToken(cuenta)
+        res.status(200).json({
+            token : token,
+            cuenta : {
+                ...cuenta
+            }
+        })
     } catch (error) {
         console.log(error)
         next(error)
     }
 }
 
+const countAll = async (req, res, next) => {
+    try {
+        const count = await cuenta_usuario_service.countAll()
+        res.status(200).json(count)
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
-    createCuentaUsuario, findById, deleteById, updateById, login
+    createCuentaUsuario, findById, deleteById, updateById, login, countAll, verify_sesion
 }
