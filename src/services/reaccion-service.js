@@ -13,8 +13,14 @@ const deleteByIdPublicacionAndIdUsuario = async (publicacion_id, usuario_id) => 
     return reaccion
 }
 
+const countAll = async () => {
+    const count = await reaccion_repository.countAll()
+    return count
+}
+
 
 module.exports = {
     create,
-    deleteByIdPublicacionAndIdUsuario
+    deleteByIdPublicacionAndIdUsuario,
+    countAll
 }

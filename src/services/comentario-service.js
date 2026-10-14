@@ -13,6 +13,11 @@ const deleteById = async (id) => {
     return comentario
 }
 
+const countAll = async () => {
+    const count = await comentario_repository.countAll()
+    return count
+}
+
 module.exports = {
-    create, deleteById
+    create, deleteById, countAll
 }

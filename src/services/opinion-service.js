@@ -27,6 +27,11 @@ const deleteById = async (id) => {
     return opinion
 }
 
+const findToLimitAndOffset = async (limit, offset) => {
+    const opiniones = await opinion_repository.findToLimitAndOffset(limit, offset)
+    return opiniones
+}
+
 module.exports = {
-    create, findById, updateById, deleteById
+    create, findById, updateById, deleteById, findToLimitAndOffset
 }

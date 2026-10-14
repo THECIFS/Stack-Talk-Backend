@@ -2,12 +2,21 @@ const cuenta_usuario_repository = require('../repositories/cuenta-usuario-reposi
 
 const bcrypt = require('bcrypt')
 const CustomError = require('../utils/custom-error')
+const cloudinary = require('../config/cloudinary')
+
 
 const createCuentaUsuario = async (cuenta, usuario) =>{
     const newCuentaUsuarioExist = await cuenta_usuario_repository.findByCorreo(cuenta.correo)
     if(newCuentaUsuarioExist) throw new CustomError('El usuario con el correo ya existe', 409)
     const hashedPassword = await bcrypt.hashSync(cuenta.contrasenia, 10)
-    const newCuentaUsuario = await cuenta_usuario_repository.create({ ...cuenta, contrasenia: hashedPassword }, usuario)
+
+    const url_foto = await cloudinary.uploader.upload(usuario.foto_perfil, {
+        folder: 'stacktalk'
+    })
+
+    const newCuentaUsuario = await cuenta_usuario_repository.create({ ...cuenta, contrasenia: hashedPassword }, {
+        ...usuario, foto_perfil:url_foto.secure_url
+    })
     if(!newCuentaUsuario) throw new CustomError('No se pudo realizar el registro del usuario', 400)
     const dataUsuario = newCuentaUsuario.usuario
     delete newCuentaUsuario.contrasenia
@@ -54,7 +63,11 @@ const findByCorreo = async (correo, contrasenia) => {
     return correoExist
 }
 
+const countAll = async () => {
+    const count = await cuenta_usuario_repository.countAll()
+    return count
+}
 
 module.exports = {
-    createCuentaUsuario, findById, deleteById, updateById, findByCorreo
+    createCuentaUsuario, findById, deleteById, updateById, findByCorreo, countAll
 }

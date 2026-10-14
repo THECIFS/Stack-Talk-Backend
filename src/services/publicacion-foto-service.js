@@ -47,6 +47,11 @@ const findAllToLimitAndOffset = async (limit, offset) => {
     return publicaciones
 }
 
+const countAll = async () => {
+    const count = await publicacion_foto_repository.countAll()
+    return count
+}
+
 module.exports = {
-    create, findById, findAllToLimitAndOffset, updateById, deleteById
+    create, findById, findAllToLimitAndOffset, updateById, deleteById, countAll
 }
