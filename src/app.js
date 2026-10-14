@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const cuenta_usuario_router = require('./routes/cuenta-usuario-route')
 const opinion_router = require('./routes/opinion-route')
 const publicacion_foto_router = require('./routes/publicacion-foto-route')
@@ -7,6 +8,13 @@ const reaccion_router = require('./routes/reaccion-route')
 const comentario_router = require('./routes/comentario-route')
 
 const globalErrorHandler = require('./midlewares/global-error-hanlder')
+
+app.use(
+    cors({
+        origin:'http://localhost:3001',
+        methods:'GET, PUT, POST, DELETE'
+    })
+)
 
 app.get('/', (req,res)=>{
     res.send('Hello World')
