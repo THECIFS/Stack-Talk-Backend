@@ -11,7 +11,7 @@ const globalErrorHandler = require('./midlewares/global-error-hanlder')
 
 app.use(
     cors({
-        origin:'http://localhost:3001',
+        origin:process.env.URL_FRONTEND || 'http://localhost:3001',
         methods:'GET, PUT, POST, DELETE'
     })
 )
