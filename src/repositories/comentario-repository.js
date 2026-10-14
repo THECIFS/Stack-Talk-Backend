@@ -29,4 +29,9 @@ const findById = async (id) => {
     return comentario
 }
 
-module.exports = {create, deleteById,findById}
+const countAll = async () => {
+    const count = await prisma.comentario.count()
+    return count
+}
+
+module.exports = {create, deleteById,findById,countAll}

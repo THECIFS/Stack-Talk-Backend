@@ -34,7 +34,7 @@ const findAllToLimitAndOffset = async (limit, offset) => {
         take:Number(limit),
         skip: Number(offset),
         include:{
-            usuario: true
+            fotos: true
         },
         orderBy: {
             fecha_creacion: 'desc'
@@ -62,6 +62,11 @@ const deleteById = async (id) => {
     return publicacion
 }
 
+const countAll = async()=>{
+    const count = await prisma.publicacion.count()
+    return count
+}
+
 module.exports = {
-    create, findById, findAllToLimitAndOffset, updateById, deleteById
+    create, findById, findAllToLimitAndOffset, updateById, deleteById, countAll
 }

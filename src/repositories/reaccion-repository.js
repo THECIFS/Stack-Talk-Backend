@@ -34,6 +34,11 @@ const deleteByIdPublicacionAndIdUsuario = async (publicacion_id, usuario_id) => 
     return reaccion
 }
 
+const countAll = async () => {
+    const count = await prisma.reaccion.count()
+    return count
+}
+
 module.exports = {
-    create, deleteByIdPublicacionAndIdUsuario,findByIdPublicacionAndIdUsuario
+    create, deleteByIdPublicacionAndIdUsuario,findByIdPublicacionAndIdUsuario, countAll
 }

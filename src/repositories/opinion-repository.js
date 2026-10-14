@@ -38,8 +38,20 @@ const deleteById = async (id) => {
     return opinion
 }
 
-
+const findToLimitAndOffset = async (limit, offset) => {
+    const opiniones = await prisma.opinion.findMany({
+        take: Number(limit),
+        skip: Number(offset),
+        orderBy: {
+            fecha: 'desc'
+        },
+        include:{
+            usuario:true
+        }
+    })
+    return opiniones
+}
 
 module.exports = {
-    create, findById, updateById, deleteById
+    create, findById, updateById, deleteById, findToLimitAndOffset
 }

@@ -23,6 +23,9 @@ const findByCorreo = async (correo) => {
     const cuenta = await prisma.cuenta.findFirst({
         where: {
             correo: correo
+        },
+        include:{
+            usuario:true
         }
     })
     return cuenta
@@ -71,6 +74,11 @@ const findById = async (id) => {
     return cuenta
 }
 
+const countAll = async () => {
+    const count = await prisma.usuario.count()
+    return count
+}
+
 module.exports = {
-    create, findByCorreo, deleteById, updateById, findById
+    create, findByCorreo, deleteById, updateById, findById, countAll
 }
